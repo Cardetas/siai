@@ -15,12 +15,16 @@ objectClass: top
 objectClass: posixGroup
 cn: managers
 gidNumber: 10001
+memberUid: mgr1
+memberUid: mgr2
 
 dn: cn=developers,ou=group,dc=dom,dc=pt
 objectClass: top
 objectClass: posixGroup
 cn: developers
 gidNumber: 10002
+memberUid: dev1
+memberUid: dev2
 
 # Managers
 dn: uid=mgr1,ou=people,dc=dom,dc=pt
@@ -35,7 +39,7 @@ uidNumber: 20001
 gidNumber: 10001
 homeDirectory: /home/mgr1
 loginShell: /bin/bash
-userPassword: {SSHA}0c3qGvM6x2Xm5q+K1xT0e9kG4sH2WqZ1
+userPassword: __PASSWORD_HASH__
 
 dn: uid=mgr2,ou=people,dc=dom,dc=pt
 objectClass: top
@@ -49,7 +53,7 @@ uidNumber: 20002
 gidNumber: 10001
 homeDirectory: /home/mgr2
 loginShell: /bin/bash
-userPassword: {SSHA}0c3qGvM6x2Xm5q+K1xT0e9kG4sH2WqZ1
+userPassword: __PASSWORD_HASH__
 
 # Developers
 dn: uid=dev1,ou=people,dc=dom,dc=pt
@@ -64,7 +68,7 @@ uidNumber: 20003
 gidNumber: 10002
 homeDirectory: /home/dev1
 loginShell: /bin/bash
-userPassword: {SSHA}0c3qGvM6x2Xm5q+K1xT0e9kG4sH2WqZ1
+userPassword: __PASSWORD_HASH__
 
 dn: uid=dev2,ou=people,dc=dom,dc=pt
 objectClass: top
@@ -78,4 +82,4 @@ uidNumber: 20004
 gidNumber: 10002
 homeDirectory: /home/dev2
 loginShell: /bin/bash
-userPassword: {SSHA}0c3qGvM6x2Xm5q+K1xT0e9kG4sH2WqZ1
+userPassword: __PASSWORD_HASH__
