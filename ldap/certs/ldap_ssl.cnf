@@ -1,0 +1,20 @@
+[req]
+distinguished_name = req_distinguished_name
+req_extensions = v3_req
+prompt = no
+
+[req_distinguished_name]
+C = PT
+O = dom.pt
+CN = ldap.port.dom.pt
+
+[v3_req]
+keyUsage = keyEncipherment, dataEncipherment
+extendedKeyUsage = serverAuth
+subjectAltName = @alt_names
+
+[alt_names]
+DNS.1 = ldap.port.dom.pt
+DNS.2 = ldap.dom.pt
+IP.1 = 172.16.20.10
+IP.2 = 127.0.0.1
