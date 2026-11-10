@@ -6,6 +6,7 @@ set -euo pipefail
   exit 1
 }
 
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "[1/4] Enabling permanent IPv4 forwarding..."
 cat > /etc/sysctl.d/99-siai-forwarding.conf <<EOF
