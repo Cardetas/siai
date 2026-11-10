@@ -7,4 +7,4 @@ replace: olcTLSCertificateFile
 olcTLSCertificateFile: /etc/ssl/certs/ldap.crt
 -
 replace: olcTLSCertificateKeyFile
-olcTLSCertificateKeyFile: /etc/ssl/private/ldap.key
+olcTLSCertificateKeyFile: /etc/ldap/certs/ldap.key
