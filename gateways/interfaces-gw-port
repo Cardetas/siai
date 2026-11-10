@@ -1,0 +1,26 @@
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# Interconnection Link to gw.usa
+auto enp0s3
+iface enp0s3 inet static
+    address 10.10.254.1/24
+    up ip route replace 10.10.40.0/24 via 10.10.254.2
+    up ip route replace 172.16.40.0/24 via 10.10.254.2
+
+# PORT Internal Network
+auto enp0s8
+iface enp0s8 inet static
+    address 10.10.20.1/24
+
+# PORT DMZ Network
+auto enp0s9
+iface enp0s9 inet static
+    address 172.16.20.1/24
+
+# Internet Hypervisor NAT
+auto enp0s10
+iface enp0s10 inet dhcp
