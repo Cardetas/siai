@@ -8,7 +8,7 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "libnss-ldapd libnss-ldapd/nsswitch multiselect passwd, group, shadow" | debconf-set-selection
+echo "libnss-ldapd libnss-ldapd/nsswitch multiselect passwd, group, shadow" | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install -y libnss-ldapd libpam-ldapd nslcd ldap-utils
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive libnss-ldapd

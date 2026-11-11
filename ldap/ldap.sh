@@ -50,6 +50,6 @@ sed "s|__PASSWORD_HASH__|$HASH|g" "$DIR/ldif/02_structure.ldif" |
   ldapadd -c -x -H ldapi:/// -D "cn=admin,$SUFFIX" -w "$ADMIN_PW" || true
 
 
-install -m 644 "$DIR/ldap.conf" /etc/ldap/ldap.conf
+install -m 644 "$DIR/client/ldap.conf" /etc/ldap/ldap.conf
 
 echo "ldap server deployed!"
