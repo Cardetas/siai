@@ -22,4 +22,4 @@ bash "${PROJECT_ROOT}/dhcp/gw-usa/dhcp.sh"
 echo "Setting up Slave dns"
 bash "${PROJECT_ROOT}/dns/slave/dns_slave.sh"
 
-echo "Gateway USA deployed with all services""
+echo "Gateway USA deployed with all services"
