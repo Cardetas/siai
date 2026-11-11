@@ -21,6 +21,8 @@ fi
 install -m 644 "$DIR/interfaces-gw-port" /etc/network/interfaces
 
 systemctl restart networking 2>/dev/null
+ifup enp0s10
+dhclient enp0s10
 
 # 3. Permanent NAT Masquerading via nftables
 echo "[3/4] Configuring permanent NAT masquerading with nftables..."
