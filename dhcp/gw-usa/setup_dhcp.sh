@@ -22,13 +22,27 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y kea-dhcp4-server kea-dhcp-ddns
 
 # 2. Deploy Configuration Files
 echo "[2/4] Deploying kea-dhcp4.conf and kea-dhcp-ddns.conf..."
-mkdir -p /etc/kea/ /var/lib/kea/ /var/log/kea/
+mkdir -p /etc/kea/ /var/lib/kea/ /var/log/kea/ /run/kea/
 
 [ -f /etc/kea/kea-dhcp4.conf ] && cp /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp4.conf.bak
 [ -f /etc/kea/kea-dhcp-ddns.conf ] && cp /etc/kea/kea-dhcp-ddns.conf /etc/kea/kea-dhcp-ddns.conf.bak
 
 install -m 644 "$DIR/kea-dhcp4.conf" /etc/kea/kea-dhcp4.conf
 install -m 644 "$DIR/kea-dhcp-ddns.conf" /etc/kea/kea-dhcp-ddns.conf
+
+# Fix permissions for the _kea service user
+KEA_USER="_kea"
+if ! id -u "_kea" >/dev/null 2>&1; then
+    if id -u "kea" >/dev/null 2>&1; then
+        KEA_USER="kea"
+    else
+        KEA_USER="root"
+    fi
+fi
+echo "[+] Setting directory and config ownership to ${KEA_USER}:${KEA_USER}..."
+chown -R "${KEA_USER}:${KEA_USER}" /etc/kea/ /var/lib/kea/ /var/log/kea/ /run/kea/ 2>/dev/null || true
+chmod 755 /etc/kea/ /var/lib/kea/ /var/log/kea/ /run/kea/
+chmod 644 /etc/kea/kea-dhcp4.conf /etc/kea/kea-dhcp-ddns.conf
 
 # 3. Test Configuration Syntax
 echo "[3/4] Validating Kea configuration syntax..."
