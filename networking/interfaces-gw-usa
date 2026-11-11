@@ -9,6 +9,8 @@ auto enp0s3
 iface enp0s3 inet static
     address 10.10.254.2/24
     gateway 10.10.254.1
+    dns-nameservers 10.10.254.1 1.1.1.1
+    dns-search port.dom.pt usa.dom.pt dom.pt
     up ip route replace 10.10.20.0/24 via 10.10.254.1
     up ip route replace 172.16.20.0/24 via 10.10.254.1
 
