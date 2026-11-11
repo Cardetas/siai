@@ -15,7 +15,7 @@ install -m 644 $DIR/gateway.conf /etc/ssh/sshd_config.d/gateway.conf
 install -d -m 755 /etc/ssh/authorized_keys
 for user in mgr1 mgr2 dev1 dev2; do
   install -m 644 "$DIR/../keys/id_ed25519_${user}.pub" "/etc/ssh/authorized_keys/$user"
-  useradd -M -s /bin/bash "$user"
+  id -u "$user" >/dev/null 2>&1 || useradd -M -s /bin/bash "$user"
 done
 
 systemctl restart ssh
