@@ -12,6 +12,10 @@ apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install -y openssh-server
 
 install -m 644 $DIR/gateway.conf /etc/ssh/sshd_config.d/gateway.conf
+install -d -m 755 /etc/ssh/authorized_keys
+for user in mgr1 mgr2 dev1 dev2; do
+  install -m 644 "$DIR/../keys/id_ed25519_${user}.pub" "/etc/ssh/authorized_keys/$user"
+done
 
 systemctl restart ssh
 systemctl enable ssh
