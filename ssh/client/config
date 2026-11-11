@@ -1,0 +1,29 @@
+# ==============================================================================
+# SIAI 2026/2027 - SSH Client Configuration
+# Location: ~/.ssh/config (or /etc/ssh/ssh_config.d/siai-client.conf)
+# ==============================================================================
+
+# 1. SSH Gateway (gw.port.dom.pt / ssh.dom.pt)
+Host ssh.dom.pt ssh-gw
+    HostName ssh.dom.pt
+    User mgr1
+    IdentityFile ~/.ssh/id_ed25519_mgr1
+    StrictHostKeyChecking accept-new
+
+# 2. PORT Mail Server via Jump Gateway
+# Allows: ssh mail.port.dom.pt (or ssh mail.dom.pt)
+Host mail.port.dom.pt mail.dom.pt
+    HostName 172.16.20.20
+    ProxyJump mgr1@ssh.dom.pt
+    User mgr1
+    IdentityFile ~/.ssh/id_ed25519_mgr1
+    StrictHostKeyChecking accept-new
+
+# 3. USA Backup Mail Server via Jump Gateway
+# Allows: ssh smtp2.usa.dom.pt
+Host smtp2.usa.dom.pt
+    HostName 172.16.40.20
+    ProxyJump mgr1@ssh.dom.pt
+    User mgr1
+    IdentityFile ~/.ssh/id_ed25519_mgr1
+    StrictHostKeyChecking accept-new
