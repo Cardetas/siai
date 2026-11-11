@@ -28,6 +28,8 @@ echo "[*] Step 1: Setting Hostname to gw.port.dom.pt..."
 hostnamectl set-hostname gw.port.dom.pt || hostname gw.port.dom.pt
 echo "127.0.1.1 gw.port.dom.pt gw" >> /etc/hosts 2>/dev/null || true
 
+sleep 2
+
 # --- 2. Network Routing, Forwarding & NAT Masquerading ---
 echo ""
 echo "[*] Step 2: Configuring Network Interfaces, Forwarding & NAT..."
