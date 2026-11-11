@@ -141,7 +141,7 @@ siai/
    ```bash
    git clone https://github.com/Cardetas/siai.git
    cd siai
-   sudo bash deploy/client.sh
+   sudo -E bash deploy/client.sh
    ```
 4. **What this deploys**: Configures the machine as an LDAP client (allowing `mgr1`, `mgr2`, `dev1`, `dev2` logins with automatic home directory creation) and copies the test SSH private keys to `~/.ssh/`.
 
