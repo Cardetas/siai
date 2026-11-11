@@ -1,14 +1,10 @@
-// Include TSIG key for authenticated DDNS and zone transfers
 include "/etc/bind/tsig.key";
 
-// ==========================================
-// 1. FORWARD ZONES
-// ==========================================
 
-// Main Domain (Signed with DNSSEC)
+// Main Domain
 zone "dom.pt" {
     type master;
-    file "/var/lib/bind/db.dom.pt";
+    file "/var/lib/bind/dom.pt.db";
     dnssec-policy default;
     key-directory "/var/lib/bind";
     allow-transfer { key "tsig-key"; 10.10.254.2; };
@@ -16,34 +12,30 @@ zone "dom.pt" {
     notify yes;
 };
 
-// PORT Sub-domain (Dynamic DNS enabled)
+// PORT Sub-domain
 zone "port.dom.pt" {
     type master;
-    file "/var/lib/bind/db.port.dom.pt";
+    file "/var/lib/bind/port.dom.pt.db";
     allow-update { key "tsig-key"; };
     allow-transfer { key "tsig-key"; 10.10.254.2; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
 
-// USA Sub-domain (Dynamic DNS enabled)
+// USA Sub-domain
 zone "usa.dom.pt" {
     type master;
-    file "/var/lib/bind/db.usa.dom.pt";
+    file "/var/lib/bind/usa.dom.pt.db";
     allow-update { key "tsig-key"; };
     allow-transfer { key "tsig-key"; 10.10.254.2; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
-
-// ==========================================
-// 2. REVERSE ZONES
-// ==========================================
 
 // PORT Internal (10.10.20.0/24)
 zone "20.10.10.in-addr.arpa" {
     type master;
-    file "/var/lib/bind/db.10.10.20";
+    file "/var/lib/bind/INTERNAL_PORT_rev.db";
     allow-update { key "tsig-key"; };
     allow-transfer { key "tsig-key"; 10.10.254.2; };
     also-notify { 10.10.254.2; };
@@ -53,7 +45,7 @@ zone "20.10.10.in-addr.arpa" {
 // PORT DMZ (172.16.20.0/24)
 zone "20.16.172.in-addr.arpa" {
     type master;
-    file "/var/lib/bind/db.172.16.20";
+    file "/var/lib/bind/DMZ_PORT_rev.db";
     allow-update { key "tsig-key"; };
     allow-transfer { key "tsig-key"; 10.10.254.2; };
     also-notify { 10.10.254.2; };
@@ -63,7 +55,7 @@ zone "20.16.172.in-addr.arpa" {
 // USA Internal (10.10.40.0/24)
 zone "40.10.10.in-addr.arpa" {
     type master;
-    file "/var/lib/bind/db.10.10.40";
+    file "/var/lib/bind/INTERNAL_USA_rev.db";
     allow-update { key "tsig-key"; };
     allow-transfer { key "tsig-key"; 10.10.254.2; };
     also-notify { 10.10.254.2; };
@@ -73,7 +65,7 @@ zone "40.10.10.in-addr.arpa" {
 // USA DMZ (172.16.40.0/24)
 zone "40.16.172.in-addr.arpa" {
     type master;
-    file "/var/lib/bind/db.172.16.40";
+    file "/var/lib/bind/DMZ_USA_rev.db";
     allow-update { key "tsig-key"; };
     allow-transfer { key "tsig-key"; 10.10.254.2; };
     also-notify { 10.10.254.2; };

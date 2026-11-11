@@ -12,14 +12,13 @@ $TTL    86400
 
 ; Gateway & DNS Servers
 gw      IN      A       10.10.40.1
-gw      IN      A       172.16.40.1
 gw      IN      A       10.10.254.2
+gw      IN      A       172.16.40.1
 
-dns2    IN      A       10.10.254.2
 dns2    IN      A       10.10.40.1
+dns2    IN      A       10.10.254.2
+dns2    IN      A       172.16.40.1
 
 ; Registered Servers
 web     IN      A       172.16.40.10
 smtp2   IN      A       172.16.40.20
-
-; Dynamic clients will be registered here by Kea DHCP-DDNS

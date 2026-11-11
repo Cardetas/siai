@@ -1,5 +1,5 @@
 $TTL    86400
-@       IN      SOA     dns1.port.dom.pt. admin.usa.dom.pt. (
+@       IN      SOA     dns1.port.dom.pt. admin.port.dom.pt. (
                         2026111101      ; Serial
                         3600            ; Refresh
                         1800            ; Retry
@@ -10,6 +10,4 @@ $TTL    86400
 @       IN      NS      dns2.usa.dom.pt.
 
 ; Gateway
-1       IN      PTR     gw.usa.dom.pt.
-
-; Dynamic client PTRs registered by Kea DHCP-DDNS
+1       IN      PTR     gw.port.dom.pt.

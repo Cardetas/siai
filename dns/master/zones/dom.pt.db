@@ -10,32 +10,32 @@ $TTL    86400
 @       IN      NS      dns1.dom.pt.
 @       IN      NS      dns2.dom.pt.
 
-; Router PORT (dns1 and ssh)
+; Router PORT
 dns1    IN      A       10.10.254.1
 ssh     IN      CNAME   dns1.dom.pt.
 
-; Router USA (dns2 slave)
+; Router USA
 dns2    IN      A       10.10.254.2
 
-; Web Server (dom.pt resolves to webserver, plus web.dom.pt & ftp.dom.pt)
+; Web Server
 @       IN      A       172.16.40.10
 web     IN      CNAME   web.usa.dom.pt.
 ftp     IN      CNAME   web.usa.dom.pt.
 
-; Mail Servers (MX records)
+; Mail Servers
 @       IN      MX      10 mail.port.dom.pt.
 @       IN      MX      20 smtp2.usa.dom.pt.
 
-; Mail Server Names (mail, webmail, pop, imap)
+; Mail Server Names
 mail    IN      CNAME   mail.port.dom.pt.
 webmail IN      CNAME   mail.port.dom.pt.
 pop     IN      CNAME   mail.port.dom.pt.
 imap    IN      CNAME   mail.port.dom.pt.
 
-; LDAP Server (ldap.dom.pt -> ldap.port.dom.pt)
+; LDAP Server
 ldap    IN      CNAME   ldap.port.dom.pt.
 
-; Subdomain Delegations (Glue Records)
+; Subdomain Delegations
 port    IN      NS      dns1.dom.pt.
 port    IN      NS      dns2.dom.pt.
 
