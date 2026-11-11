@@ -27,7 +27,7 @@ zone "usa.dom.pt" {
 // 2. REVERSE SLAVE ZONES
 // ==========================================
 
-zone "20.10.in-addr.arpa" {
+zone "20.10.10.in-addr.arpa" {
     type slave;
     file "/var/lib/bind/db.10.10.20";
     masters { 10.10.254.1 key "tsig-key"; };
@@ -39,7 +39,7 @@ zone "20.16.172.in-addr.arpa" {
     masters { 10.10.254.1 key "tsig-key"; };
 };
 
-zone "40.10.in-addr.arpa" {
+zone "40.10.10.in-addr.arpa" {
     type slave;
     file "/var/lib/bind/db.10.10.40";
     masters { 10.10.254.1 key "tsig-key"; };

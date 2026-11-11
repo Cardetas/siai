@@ -41,7 +41,7 @@ zone "usa.dom.pt" {
 // ==========================================
 
 // PORT Internal (10.10.20.0/24)
-zone "20.10.in-addr.arpa" {
+zone "20.10.10.in-addr.arpa" {
     type master;
     file "/var/lib/bind/db.10.10.20";
     allow-update { key "tsig-key"; };
@@ -61,7 +61,7 @@ zone "20.16.172.in-addr.arpa" {
 };
 
 // USA Internal (10.10.40.0/24)
-zone "40.10.in-addr.arpa" {
+zone "40.10.10.in-addr.arpa" {
     type master;
     file "/var/lib/bind/db.10.10.40";
     allow-update { key "tsig-key"; };
