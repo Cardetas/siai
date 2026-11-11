@@ -45,7 +45,7 @@ fi
 # --- 2. LDAP Client (NSS / PAM) Setup ---
 echo ""
 echo "[*] Step 2: Configuring Local NSS/PAM to authenticate via LDAP..."
-bash "${SCRIPT_DIR}/setup_ldap_client_helper.sh"
+bash "${PROJECT_ROOT}/ldap/ldap_client.sh"
 
 # --- 3. SSH Server Hardening for Backup Mail Server ---
 echo ""

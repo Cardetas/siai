@@ -24,7 +24,7 @@ echo "========================================================================"
 # --- 1. LDAP Client Configuration ---
 echo ""
 echo "[*] Step 1: Configuring LDAP Authentication (NSS / PAM / StartTLS)..."
-bash "${SCRIPT_DIR}/setup_ldap_client_helper.sh"
+bash "${PROJECT_ROOT}/ldap/ldap_client.sh"
 
 # --- 2. SSH Client & Keys Setup ---
 echo ""
