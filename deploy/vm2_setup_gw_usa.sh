@@ -40,7 +40,7 @@ bash "${PROJECT_ROOT}/dhcp/gw-usa/setup_dhcp.sh"
 # --- 4. BIND9 Slave DNS ---
 echo ""
 echo "[*] Step 4: Provisioning BIND9 Slave DNS..."
-bash "${PROJECT_ROOT}/dns/slave/setup_dns_slave.sh"
+bash "${PROJECT_ROOT}/dns/slave/dns_slave.sh"
 
 # --- 5. Final Status Summary ---
 echo ""
