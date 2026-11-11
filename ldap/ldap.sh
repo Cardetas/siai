@@ -28,7 +28,6 @@ apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install -y slapd ldap-utils
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive slapd
 
-echo "Loading auxiliary schemas (cosine, nis, inetorgperson)..."
 for schema in cosine nis inetorgperson; do
   ldapadd -Y EXTERNAL -H ldapi:/// -f "/etc/ldap/schema/${schema}.ldif" 2>/dev/null || true
 done
@@ -37,8 +36,6 @@ install -d -m 755 -o openldap -g openldap /etc/ldap/certs
 install -m 644 -o openldap -g openldap "$DIR/certs/ca.crt" /etc/ldap/certs/dom_ca.crt
 install -m 644 -o openldap -g openldap "$DIR/certs/ldap.crt" /etc/ldap/certs/ldap.crt
 install -m 600 -o openldap -g openldap "$DIR/certs/ldap.key" /etc/ldap/certs/ldap.key
-
-
 install -m 644 "$DIR/certs/ca.crt" /usr/local/share/ca-certificates/dom_ca.crt
 update-ca-certificates
 
@@ -60,20 +57,4 @@ TLS_CACERT /etc/ssl/certs/ca-certificates.crt
 TLS_REQCERT demand
 EOF
 
-echo
-echo "=== Testing LDAP Configuration ==="
-# Test 1: LDAPS (port 636) with certificate validation
-if LDAPTLS_CACERT=/etc/ssl/certs/ca-certificates.crt \
-   ldapwhoami -x -H "ldaps://$HOST" -D "uid=mgr1,ou=people,$SUFFIX" -w "$USER_PW"; then
-  echo "✔ OK: LDAPS authentication and certificate validation successful"
-else
-  echo "✖ LDAPS test failed (does '$HOST' resolve? If DNS is not yet ready, add '$HOST' to /etc/hosts)"
-fi
-
-# Test 2: StartTLS (port 389) with certificate validation
-if LDAPTLS_CACERT=/etc/ssl/certs/ca-certificates.crt \
-   ldapwhoami -x -ZZ -H "ldap://$HOST" -D "uid=mgr1,ou=people,$SUFFIX" -w "$USER_PW"; then
-  echo "✔ OK: StartTLS authentication and certificate validation successful"
-else
-  echo "✖ StartTLS test failed"
-fi
+echo "ldap server deployed!"
