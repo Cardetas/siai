@@ -21,8 +21,13 @@ fi
 install -m 644 "$DIR/interfaces-gw-port" /etc/network/interfaces
 
 systemctl restart networking 2>/dev/null
-ifup enp0s10
-dhclient enp0s10
+
+echo "Waiting for Internet connection on enp0s10..."
+count=0
+until ping -c 1 -W 1 8.8.8.8 >/dev/null 2>&1 || [ $count -ge 15 ]; do
+    sleep 1
+    count=$((count + 1))
+done
 
 # 3. Permanent NAT Masquerading via nftables
 echo "[3/4] Configuring permanent NAT masquerading with nftables..."
