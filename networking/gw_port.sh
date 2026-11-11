@@ -20,7 +20,7 @@ if [ -f /etc/network/interfaces ]; then
 fi
 install -m 644 "$DIR/interfaces-gw-port" /etc/network/interfaces
 
-systemctl restart networking 2>/dev/null || ifup -a 2>/dev/null || true
+systemctl restart networking 2>/dev/null
 
 # 3. Permanent NAT Masquerading via nftables
 echo "[3/4] Configuring permanent NAT masquerading with nftables..."

@@ -21,7 +21,7 @@ if [ -f /etc/network/interfaces ]; then
 fi
 install -m 644 "$DIR/interfaces-gw-usa" /etc/network/interfaces
 
-systemctl restart networking 2>/dev/null || ifup -a 2>/dev/null || true
+systemctl restart networking 2>/dev/null
 
 
 echo
