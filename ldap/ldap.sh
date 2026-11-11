@@ -16,7 +16,6 @@ echo
 read -rsp "Password for the 4 users: " USER_PW
 echo
 
-
 echo "slapd slapd/domain string $DOMAIN"          | debconf-set-selections
 echo "slapd shared/organization string $DOMAIN"   | debconf-set-selections
 echo "slapd slapd/password1 password $ADMIN_PW"   | debconf-set-selections
