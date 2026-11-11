@@ -8,18 +8,15 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-echo "[1/4] Enabling permanent IPv4 forwarding..."
 cat > /etc/sysctl.d/99-siai-forwarding.conf <<EOF
 net.ipv4.ip_forward = 1
 EOF
 sysctl -p /etc/sysctl.d/99-siai-forwarding.conf >/dev/null
 
-echo "[2/4] Installing /etc/network/interfaces..."
 if [ -f /etc/network/interfaces ]; then
   cp /etc/network/interfaces /etc/network/interfaces.bak
 fi
 install -m 644 "$DIR/interfaces-gw-port" /etc/network/interfaces
-
 systemctl restart networking 2>/dev/null
 
 echo "Waiting for Internet connection on enp0s10..."
@@ -29,12 +26,9 @@ until ping -c 1 -W 1 8.8.8.8 >/dev/null 2>&1 || [ $count -ge 15 ]; do
     count=$((count + 1))
 done
 
-# 3. Permanent NAT Masquerading via nftables
-echo "[3/4] Configuring permanent NAT masquerading with nftables..."
 DEBIAN_FRONTEND=noninteractive apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install -y nftables
 
-# Internet interface is Adapter 4 (enp0s10) in interfaces-gw-port
 INET_IFACE="enp0s10"
 echo "Configuring NAT on Internet interface: $INET_IFACE"
 
@@ -66,13 +60,4 @@ EOF
 nft -f /etc/nftables.conf
 systemctl enable --now nftables
 
-# 4. Status & Self-Test
-echo
-echo "[4/4] Deployment complete! Verification:"
-echo "--------------------------------------------------"
-echo "Active Routing Table:"
-ip route show
-echo
-echo "Active nftables NAT ruleset:"
-nft list table ip nat
-echo "--------------------------------------------------"
+echo "ip forwarding, interfaces and nat are setup!"
