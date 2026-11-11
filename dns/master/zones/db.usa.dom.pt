@@ -1,0 +1,25 @@
+$TTL    86400
+@       IN      SOA     dns1.port.dom.pt. admin.usa.dom.pt. (
+                        2026111101      ; Serial
+                        3600            ; Refresh
+                        1800            ; Retry
+                        604800          ; Expire
+                        86400 )         ; Negative Cache TTL
+
+; Name Servers Authoritative for usa.dom.pt
+@       IN      NS      dns1.port.dom.pt.
+@       IN      NS      dns2.usa.dom.pt.
+
+; Gateway & DNS Servers
+gw      IN      A       10.10.40.1
+gw      IN      A       172.16.40.1
+gw      IN      A       10.10.254.2
+
+dns2    IN      A       10.10.254.2
+dns2    IN      A       10.10.40.1
+
+; Registered Servers
+web     IN      A       172.16.40.10
+smtp2   IN      A       172.16.40.20
+
+; Dynamic clients will be registered here by Kea DHCP-DDNS

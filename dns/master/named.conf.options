@@ -1,0 +1,32 @@
+options {
+    directory "/var/cache/bind";
+
+    // Listen on all network interfaces
+    listen-on { any; };
+    listen-on-v6 { none; };
+
+    // Allow queries from all subnets and localhost
+    allow-query { any; };
+
+    // Recursion allowed for internal subnets and interconnection
+    recursion yes;
+    allow-recursion {
+        127.0.0.0/8;
+        10.10.20.0/24;
+        172.16.20.0/24;
+        10.10.254.0/24;
+        10.10.40.0/24;
+        172.16.40.0/24;
+    };
+
+    // Forward outside queries to Google DNS
+    forwarders {
+        8.8.8.8;
+        8.8.4.4;
+    };
+
+    // DNSSEC validation
+    dnssec-validation auto;
+
+    auth-nxdomain no;    # conform to RFC1035
+};

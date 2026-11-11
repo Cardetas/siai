@@ -1,0 +1,81 @@
+// Include TSIG key for authenticated DDNS and zone transfers
+include "/etc/bind/tsig.key";
+
+// ==========================================
+// 1. FORWARD ZONES
+// ==========================================
+
+// Main Domain (Signed with DNSSEC)
+zone "dom.pt" {
+    type master;
+    file "/var/lib/bind/db.dom.pt";
+    dnssec-policy default;
+    key-directory "/var/lib/bind";
+    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    also-notify { 10.10.254.2; };
+    notify yes;
+};
+
+// PORT Sub-domain (Dynamic DNS enabled)
+zone "port.dom.pt" {
+    type master;
+    file "/var/lib/bind/db.port.dom.pt";
+    allow-update { key "tsig-key"; };
+    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    also-notify { 10.10.254.2; };
+    notify yes;
+};
+
+// USA Sub-domain (Dynamic DNS enabled)
+zone "usa.dom.pt" {
+    type master;
+    file "/var/lib/bind/db.usa.dom.pt";
+    allow-update { key "tsig-key"; };
+    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    also-notify { 10.10.254.2; };
+    notify yes;
+};
+
+// ==========================================
+// 2. REVERSE ZONES
+// ==========================================
+
+// PORT Internal (10.10.20.0/24)
+zone "20.10.in-addr.arpa" {
+    type master;
+    file "/var/lib/bind/db.10.10.20";
+    allow-update { key "tsig-key"; };
+    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    also-notify { 10.10.254.2; };
+    notify yes;
+};
+
+// PORT DMZ (172.16.20.0/24)
+zone "20.16.172.in-addr.arpa" {
+    type master;
+    file "/var/lib/bind/db.172.16.20";
+    allow-update { key "tsig-key"; };
+    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    also-notify { 10.10.254.2; };
+    notify yes;
+};
+
+// USA Internal (10.10.40.0/24)
+zone "40.10.in-addr.arpa" {
+    type master;
+    file "/var/lib/bind/db.10.10.40";
+    allow-update { key "tsig-key"; };
+    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    also-notify { 10.10.254.2; };
+    notify yes;
+};
+
+// USA DMZ (172.16.40.0/24)
+zone "40.16.172.in-addr.arpa" {
+    type master;
+    file "/var/lib/bind/db.172.16.40";
+    allow-update { key "tsig-key"; };
+    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    also-notify { 10.10.254.2; };
+    notify yes;
+};

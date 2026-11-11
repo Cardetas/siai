@@ -1,0 +1,43 @@
+$TTL    86400
+@       IN      SOA     dns1.dom.pt. admin.dom.pt. (
+                        2026111101      ; Serial
+                        3600            ; Refresh (1 hour)
+                        1800            ; Retry (30 mins)
+                        604800          ; Expire (1 week)
+                        86400 )         ; Negative Cache TTL (1 day)
+
+; Name Servers
+@       IN      NS      dns1.dom.pt.
+@       IN      NS      dns2.dom.pt.
+
+; Router PORT (dns1 and ssh)
+dns1    IN      A       10.10.254.1
+ssh     IN      CNAME   dns1.dom.pt.
+
+; Router USA (dns2 slave)
+dns2    IN      A       10.10.254.2
+
+; Web Server (dom.pt resolves to webserver, plus web.dom.pt & ftp.dom.pt)
+@       IN      A       172.16.40.10
+web     IN      CNAME   web.usa.dom.pt.
+ftp     IN      CNAME   web.usa.dom.pt.
+
+; Mail Servers (MX records)
+@       IN      MX      10 mail.port.dom.pt.
+@       IN      MX      20 smtp2.usa.dom.pt.
+
+; Mail Server Names (mail, webmail, pop, imap)
+mail    IN      CNAME   mail.port.dom.pt.
+webmail IN      CNAME   mail.port.dom.pt.
+pop     IN      CNAME   mail.port.dom.pt.
+imap    IN      CNAME   mail.port.dom.pt.
+
+; LDAP Server (ldap.dom.pt -> ldap.port.dom.pt)
+ldap    IN      CNAME   ldap.port.dom.pt.
+
+; Subdomain Delegations (Glue Records)
+port    IN      NS      dns1.dom.pt.
+port    IN      NS      dns2.dom.pt.
+
+usa     IN      NS      dns1.dom.pt.
+usa     IN      NS      dns2.dom.pt.

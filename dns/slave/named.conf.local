@@ -1,0 +1,52 @@
+// Include TSIG key for authenticated zone transfers
+include "/etc/bind/tsig.key";
+
+// ==========================================
+// 1. FORWARD SLAVE ZONES
+// ==========================================
+
+zone "dom.pt" {
+    type slave;
+    file "/var/lib/bind/db.dom.pt";
+    masters { 10.10.254.1 key "tsig-key"; };
+};
+
+zone "port.dom.pt" {
+    type slave;
+    file "/var/lib/bind/db.port.dom.pt";
+    masters { 10.10.254.1 key "tsig-key"; };
+};
+
+zone "usa.dom.pt" {
+    type slave;
+    file "/var/lib/bind/db.usa.dom.pt";
+    masters { 10.10.254.1 key "tsig-key"; };
+};
+
+// ==========================================
+// 2. REVERSE SLAVE ZONES
+// ==========================================
+
+zone "20.10.in-addr.arpa" {
+    type slave;
+    file "/var/lib/bind/db.10.10.20";
+    masters { 10.10.254.1 key "tsig-key"; };
+};
+
+zone "20.16.172.in-addr.arpa" {
+    type slave;
+    file "/var/lib/bind/db.172.16.20";
+    masters { 10.10.254.1 key "tsig-key"; };
+};
+
+zone "40.10.in-addr.arpa" {
+    type slave;
+    file "/var/lib/bind/db.10.10.40";
+    masters { 10.10.254.1 key "tsig-key"; };
+};
+
+zone "40.16.172.in-addr.arpa" {
+    type slave;
+    file "/var/lib/bind/db.172.16.40";
+    masters { 10.10.254.1 key "tsig-key"; };
+};
