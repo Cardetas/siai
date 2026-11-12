@@ -16,6 +16,9 @@ echo
 read -rsp "Password for the 4 users: " USER_PW
 echo
 
+
+apt-get update -q
+DEBIAN_FRONTEND=noninteractive apt-get install -y slapd ldap-utils
 echo "slapd slapd/domain string $DOMAIN"          | debconf-set-selections
 echo "slapd shared/organization string $DOMAIN"   | debconf-set-selections
 echo "slapd slapd/password1 password $ADMIN_PW"   | debconf-set-selections
@@ -23,8 +26,6 @@ echo "slapd slapd/password2 password $ADMIN_PW"   | debconf-set-selections
 echo "slapd slapd/backend select MDB"             | debconf-set-selections
 echo "slapd slapd/purge_database boolean true"    | debconf-set-selections
 echo "slapd slapd/move_old_database boolean true" | debconf-set-selections
-apt-get update -q
-DEBIAN_FRONTEND=noninteractive apt-get install -y slapd ldap-utils
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive slapd
 
 for schema in cosine nis inetorgperson; do
@@ -40,12 +41,12 @@ update-ca-certificates
 
 ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f "$DIR/ldif/01_tls.ldif"
 sed -i 's|^SLAPD_SERVICES=.*|SLAPD_SERVICES="ldap:/// ldaps:/// ldapi:///"|' /etc/default/slapd
-systemctl restart slapd
-sleep 2
 
 HASH="$(slappasswd -s "$USER_PW")"
 echo "Populating directory tree (OUs, groups, users)..."
 sed "s|__PASSWORD_HASH__|$HASH|g" "$DIR/ldif/02_structure.ldif" |
-  ldapadd -c -x -H ldapi:/// -D "cn=admin,$SUFFIX" -w "$ADMIN_PW" || true
+ldapadd -c -x -H ldapi:/// -D "cn=admin,$SUFFIX" -w "$ADMIN_PW" || true
+
+systemctl restart slapd
 
 echo "ldap server deployed!"
