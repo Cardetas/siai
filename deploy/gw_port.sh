@@ -12,7 +12,7 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 echo "Setting Hostname to gw.port.dom.pt"
 hostnamectl set-hostname gw.port.dom.pt
-echo "127.0.1.1 gw.port.dom.pt gw" >> /etc/hosts 2>/dev/null
+grep -q "gw.port.dom.pt" /etc/hosts || echo "127.0.1.1 gw.port.dom.pt gw" >> /etc/hosts
 
 echo "Setting up networking"
 bash "${PROJECT_ROOT}/networking/gw_port.sh"

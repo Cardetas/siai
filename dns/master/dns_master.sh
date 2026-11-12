@@ -21,6 +21,15 @@ for zonefile in "$DIR/zones/"*; do
   install -m 644 -o bind -g bind "$zonefile" "/var/lib/bind/$filename"
 done
 
+named-checkconf
+named-checkzone dom.pt /var/lib/bind/dom.pt.db
+named-checkzone port.dom.pt /var/lib/bind/port.dom.pt.db
+named-checkzone usa.dom.pt /var/lib/bind/usa.dom.pt.db
+named-checkzone 20.10.10.in-addr.arpa /var/lib/bind/INTERNAL_PORT_rev.db
+named-checkzone 20.16.172.in-addr.arpa /var/lib/bind/DMZ_PORT_rev.db
+named-checkzone 40.10.10.in-addr.arpa /var/lib/bind/INTERNAL_USA_rev.db
+named-checkzone 40.16.172.in-addr.arpa /var/lib/bind/DMZ_USA_rev.db
+
 systemctl restart named
 systemctl enable named
 

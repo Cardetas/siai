@@ -13,6 +13,9 @@ if [ -f /etc/network/interfaces ]; then
   cp /etc/network/interfaces /etc/network/interfaces.bak
 fi
 install -m 644 "${DIR}/interfaces-dmz" /etc/network/interfaces
+install -m 644 "${DIR}/dmz.conf" /etc/sysctl.d/99-siai-dmz.conf
+sysctl -p /etc/sysctl.d/99-siai-dmz.conf >/dev/null
+
 systemctl restart networking
 
 echo "interfaces are setup!"

@@ -35,9 +35,12 @@ imap    IN      CNAME   mail.port.dom.pt.
 ; LDAP Server
 ldap    IN      CNAME   ldap.port.dom.pt.
 
-; Subdomain Delegations
-port    IN      NS      dns1.dom.pt.
-port    IN      NS      dns2.dom.pt.
+; Subdomain Delegations (with glue records)
+port            IN      NS      dns1.port.dom.pt.
+port            IN      NS      dns2.usa.dom.pt.
 
-usa     IN      NS      dns1.dom.pt.
-usa     IN      NS      dns2.dom.pt.
+usa             IN      NS      dns1.port.dom.pt.
+usa             IN      NS      dns2.usa.dom.pt.
+
+dns1.port       IN      A       10.10.254.1
+dns2.usa        IN      A       10.10.254.2

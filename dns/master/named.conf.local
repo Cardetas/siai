@@ -7,7 +7,7 @@ zone "dom.pt" {
     file "/var/lib/bind/dom.pt.db";
     dnssec-policy default;
     key-directory "/var/lib/bind";
-    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
@@ -17,7 +17,7 @@ zone "port.dom.pt" {
     type master;
     file "/var/lib/bind/port.dom.pt.db";
     allow-update { key "tsig-key"; };
-    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
@@ -27,7 +27,7 @@ zone "usa.dom.pt" {
     type master;
     file "/var/lib/bind/usa.dom.pt.db";
     allow-update { key "tsig-key"; };
-    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
@@ -37,7 +37,7 @@ zone "20.10.10.in-addr.arpa" {
     type master;
     file "/var/lib/bind/INTERNAL_PORT_rev.db";
     allow-update { key "tsig-key"; };
-    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
@@ -47,7 +47,7 @@ zone "20.16.172.in-addr.arpa" {
     type master;
     file "/var/lib/bind/DMZ_PORT_rev.db";
     allow-update { key "tsig-key"; };
-    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
@@ -57,7 +57,7 @@ zone "40.10.10.in-addr.arpa" {
     type master;
     file "/var/lib/bind/INTERNAL_USA_rev.db";
     allow-update { key "tsig-key"; };
-    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
     notify yes;
 };
@@ -67,7 +67,7 @@ zone "40.16.172.in-addr.arpa" {
     type master;
     file "/var/lib/bind/DMZ_USA_rev.db";
     allow-update { key "tsig-key"; };
-    allow-transfer { key "tsig-key"; 10.10.254.2; };
+    allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
     notify yes;
 };

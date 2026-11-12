@@ -17,6 +17,8 @@ install -m 644 "$DIR/named.conf.options" /etc/bind/named.conf.options
 install -m 644 "$DIR/named.conf.local" /etc/bind/named.conf.local
 install -d -m 775 -o bind -g bind /var/lib/bind
 
+named-checkconf
+
 systemctl restart named
 systemctl enable named
 

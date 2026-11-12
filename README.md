@@ -12,7 +12,21 @@ Automated infrastructure and network service deployment on Debian Linux across 5
 | **VM 2** | `gw.usa.dom.pt` | `enp0s3`: `10.10.254.2/24` (Router link)<br>`enp0s8`: `10.10.40.1/24` (USA LAN)<br>`enp0s9`: `172.16.40.1/24` (USA DMZ) | • Static Routing via `10.10.254.1`<br>• Kea DHCP Server (USA LAN & DMZ)<br>• BIND9 Slave DNS (TSIG zone transfer) |
 | **VM 3** | `port-dmz.port.dom.pt` | `enp0s3`: `172.16.20.10` (DHCP static)<br>`enp0s8`: `172.16.20.20` (DHCP static) | • OpenLDAP Server (`ldap.port.dom.pt` with TLS/LDAPS)<br>• Centralized LDAP Client (NSS / PAM `pam_mkhomedir`)<br>• Hardened SSH Mail Server (`mail.port.dom.pt`) |
 | **VM 4** | `usa-dmz.usa.dom.pt` | `enp0s3`: `172.16.40.10` (DHCP static)<br>`enp0s8`: `172.16.40.20` (DHCP static) | • Centralized LDAP Client (NSS / PAM `pam_mkhomedir`)<br>• Hardened SSH Backup Mail Server (`smtp2.usa.dom.pt`) |
-| **VM 5** | Client Machine | DHCP on PORT LAN (`10.10.20.0/24`) or USA LAN (`10.10.40.0/24`) | • Centralized LDAP Client (Login testing: `su - mgr1`)<br>• SSH Client with testing keypairs |
+| **VM 5** | `user1` (Client) | `enp0s3`: DHCP on PORT LAN (`10.10.20.0/24`) or USA LAN (`10.10.40.0/24`) | • Dynamic DHCP & DDNS registration<br>• Centralized LDAP Client (Login testing: `su - mgr1`)<br>• SSH Client with testing keypairs |
+
+### VirtualBox Adapter & MAC Requirements
+
+> [!WARNING]
+> **DMZ Static Reservations**: VM 3 and VM 4 obtain fixed IPs via Kea DHCP reservations. You **must** configure these exact VirtualBox adapter attachments and MAC addresses before booting them.
+> *(Note: on `siai_debian.ova`, Adapter 1 is named `enp0s17` instead of `enp0s3`; `networking/` scripts auto-detect and map it automatically.)*
+
+| VM | Adapter 1 (`enp0s3` / `enp0s17`) | Adapter 2 (`enp0s8`) | Adapter 3 (`enp0s9`) | Adapter 4 (`enp0s10`) |
+| :--- | :--- | :--- | :--- | :--- |
+| **VM 1 (`gw.port`)** | Internal (`interconnect`) | Internal (`port_internal`) | Internal (`port_dmz`) | NAT (Internet) |
+| **VM 2 (`gw.usa`)** | Internal (`interconnect`) | Internal (`usa_internal`) | Internal (`usa_dmz`) | — |
+| **VM 3 (`port-dmz`)** | Internal (`port_dmz`)<br>MAC: `080027002010` | Internal (`port_dmz`)<br>MAC: `080027002020` | — | — |
+| **VM 4 (`usa-dmz`)** | Internal (`usa_dmz`)<br>MAC: `080027004010` | Internal (`usa_dmz`)<br>MAC: `080027004020` | — | — |
+| **VM 5 (Client)** | Internal (`port_internal` or `usa_internal`) | — | — | — |
 
 ---
 
@@ -28,20 +42,25 @@ siai/
 │   └── client.sh                  # VM 5: Client Machine
 │
 ├── networking/                    # Network interfaces and routing configurations
+│   ├── common.sh                  # Adapter 1 auto-detection (enp0s3 / enp0s17)
 │   ├── gw_port.sh                 # VM 1: IPv4 forwarding, interfaces & nftables NAT
 │   ├── gw_usa.sh                  # VM 2: IPv4 forwarding & static routes
 │   ├── dmz.sh                     # VM 3 & 4: Dual-NIC DHCP client interface setup
+│   ├── client.sh                  # VM 5: DHCP client interface setup
 │   ├── interfaces-gw-port         # Interface definitions for Gateway PORT
 │   ├── interfaces-gw-usa          # Interface definitions for Gateway USA
-│   └── interfaces-dmz             # Interface definitions for DMZ VMs (enp0s3, enp0s8)
+│   ├── interfaces-dmz             # Interface definitions for DMZ VMs (Adapter 1, enp0s8)
+│   └── interfaces-client          # Interface definition for Client VM (Adapter 1)
 │
 ├── dhcp/                          # Kea DHCPv4 Server Configurations
 │   ├── gw-port/
-│   │   ├── dhcp.sh                # Installs and enables kea-dhcp4-server on VM 1
-│   │   └── kea-dhcp4.conf         # Subnets: 10.10.20.0/24 and 172.16.20.0/24 (reservations)
+│   │   ├── dhcp.sh                # Installs and enables kea-dhcp4 & kea-dhcp-ddns on VM 1
+│   │   ├── kea-dhcp4.conf         # Subnets: 10.10.20.0/24 and 172.16.20.0/24 (reservations)
+│   │   └── kea-dhcp-ddns.conf     # DDNS updates to 127.0.0.1 using TSIG
 │   └── gw-usa/
-│       ├── dhcp.sh                # Installs and enables kea-dhcp4-server on VM 2
-│       └── kea-dhcp4.conf         # Subnets: 10.10.40.0/24 and 172.16.40.0/24 (reservations)
+│       ├── dhcp.sh                # Installs and enables kea-dhcp4 & kea-dhcp-ddns on VM 2
+│       ├── kea-dhcp4.conf         # Subnets: 10.10.40.0/24 and 172.16.40.0/24 (reservations)
+│       └── kea-dhcp-ddns.conf     # DDNS updates to 10.10.254.1 using TSIG
 │
 ├── dns/                           # BIND9 DNS Architecture (Authoritative, TSIG, DNSSEC)
 │   ├── tsig.key                   # Shared TSIG key for master-slave zone replication
@@ -74,8 +93,8 @@ siai/
     │   ├── gateway.conf           # AllowTcpForwarding yes, PubkeyAuthentication yes
     │   └── gateway_ssh.sh         # Installs gateway config and public keys in /etc/ssh/authorized_keys
     ├── mail-servers/
-    │   ├── mail.conf              # AllowGroups managers, Match Address *,!172.16.20.1,!10.10.254.1
-    │   └── mail_ssh.sh            # Installs mail config and public keys in /etc/ssh/authorized_keys
+    │   ├── mail.conf              # PermitRootLogin no, PasswordAuthentication no, AllowGroups managers
+    │   └── mail_ssh.sh            # Installs 10-mail.conf, Match Address in sshd_config, and authorized_keys
     ├── client/
     │   └── client_ssh.sh          # Installs private keys into ~/.ssh (mode 600)
     └── keys/                      # Pre-generated Ed25519 keypairs (mgr1, mgr2, dev1, dev2)
@@ -141,43 +160,62 @@ siai/
    ```bash
    git clone https://github.com/Cardetas/siai.git
    cd siai
-   sudo -E bash deploy/client.sh
+   sudo bash deploy/client.sh
    ```
-4. **What this deploys**: Configures the machine as an LDAP client (allowing `mgr1`, `mgr2`, `dev1`, `dev2` logins with automatic home directory creation) and copies the test SSH private keys to `~/.ssh/`.
+4. **What this deploys**: Configures Adapter 1 (`enp0s3`/`enp0s17`) via DHCP, configures the machine as an LDAP client (allowing `mgr1`, `mgr2`, `dev1`, `dev2` logins with automatic home directory creation), and copies the test SSH private keys to `~/.ssh/`.
 
 ---
 
 ## Verification & Testing
 
-### 1. DNS Verification
-Test name resolution and DNSSEC from the client:
+### 1. Networking, DHCP & DDNS Verification
+Check routing, NAT, lease timers (8h valid / 6h renew), and dynamic DNS registration:
 ```bash
-# Test Master DNS resolution
-dig @10.10.20.1 mail.port.dom.pt +short
+# Verify client IP, lease timers, and Internet NAT
+ip a
+ping -c 2 172.16.40.10
+ping -c 2 8.8.8.8
 
-# Test CNAME resolution
+# Verify Kea DDNS dynamic registration (forward & reverse)
+dig @10.10.20.1 user1.port.dom.pt +short
+dig @10.10.20.1 -x <CLIENT_IP> +short
+```
+
+### 2. DNS Verification
+Test name resolution, slave replication, and DNSSEC from the client:
+```bash
+# Test Master and Slave DNS resolution
+dig @10.10.20.1 mail.port.dom.pt +short
+dig @10.10.254.2 mail.port.dom.pt +short
+
+# Test CNAME and MX resolution
 dig @10.10.20.1 webmail.dom.pt +short
+dig @10.10.20.1 dom.pt MX +short
 
 # Test DNSSEC validation
 dig @10.10.20.1 dom.pt +dnssec +multiline
 ```
 
-### 2. LDAP Authentication Verification
-On VM 5 (or any client machine), verify LDAP user resolution and automatic home directory creation:
+### 3. LDAP Authentication Verification
+On VM 5 (or any client machine), verify StartTLS/LDAPS certificate validation, NSS lookup, and automatic home directory creation:
 ```bash
+# Verify StartTLS & LDAPS against custom Root CA
+ldapsearch -x -ZZ -H ldap://ldap.dom.pt -b dc=dom,dc=pt "(uid=mgr1)"
+ldapsearch -x -H ldaps://ldap.dom.pt -b dc=dom,dc=pt "(uid=mgr1)"
+
 # Verify user lookup via NSS
 getent passwd mgr1
 getent group managers
 
 # Verify interactive login & pam_mkhomedir
 su - mgr1
-# Type password: mgr1
+# Type password (set during ldap.sh)
 pwd
 # Expected output: /home/mgr1 (automatically created)
 exit
 ```
 
-### 3. SSH Access Control & Gateway Jump Verification
+### 4. SSH Access Control & Gateway Jump Verification
 From the client machine, run standard OpenSSH commands using `-J` (Jump Host):
 
 * **Manager access via Gateway (MUST SUCCEED)**:
@@ -201,5 +239,11 @@ From the client machine, run standard OpenSSH commands using `-J` (Jump Host):
 * **Password authentication attempt (MUST BE REFUSED)**:
   ```bash
   ssh -o PubkeyAuthentication=no -J mgr1@ssh.dom.pt mgr1@mail.port.dom.pt
+  # Expected: Permission denied (publickey)
+  ```
+
+* **Direct root login attempt via Gateway (MUST BE REFUSED by `PermitRootLogin no`)**:
+  ```bash
+  ssh -J mgr1@ssh.dom.pt root@mail.port.dom.pt
   # Expected: Permission denied (publickey)
   ```

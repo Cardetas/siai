@@ -21,7 +21,7 @@ install -m 644 "$DIR/interfaces-gw-usa" /etc/network/interfaces
 cat > /etc/resolv.conf <<EOF
 nameserver 10.10.254.1
 nameserver 127.0.0.1
-search port.dom.pt usa.dom.pt dom.pt
+search  usa.dom.pt port.dom.pt dom.pt
 EOF
 
 systemctl restart networking 2>/dev/null

@@ -11,7 +11,7 @@ PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 echo "Setting Hostname to port-dmz.port.dom.pt"
 hostnamectl set-hostname port-dmz.port.dom.pt
-echo "127.0.1.1 port-dmz.port.dom.pt port-dmz" >> /etc/hosts 2>/dev/null
+grep -q "port-dmz.port.dom.pt" /etc/hosts || echo "127.0.1.1 port-dmz.port.dom.pt port-dmz" >> /etc/hosts
 
 echo "Setting up networking"
 bash "${PROJECT_ROOT}/networking/dmz.sh"
