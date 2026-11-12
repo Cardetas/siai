@@ -13,6 +13,7 @@ net.ipv4.ip_forward = 1
 EOF
 sysctl -p /etc/sysctl.d/99-siai-forwarding.conf >/dev/null
 
+ifdown -a
 if [ -f /etc/network/interfaces ]; then
   cp /etc/network/interfaces /etc/network/interfaces.bak
 fi

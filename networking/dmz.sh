@@ -8,6 +8,7 @@ set -euo pipefail
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+ifdown -a
 if [ -f /etc/network/interfaces ]; then
   cp /etc/network/interfaces /etc/network/interfaces.bak
 fi
