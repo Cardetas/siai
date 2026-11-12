@@ -19,8 +19,8 @@ if [ -f /etc/network/interfaces ]; then
 fi
 install -m 644 "$DIR/interfaces-gw-usa" /etc/network/interfaces
 cat > /etc/resolv.conf <<EOF
-nameserver 10.10.254.1
 nameserver 127.0.0.1
+nameserver 10.10.254.1
 search  usa.dom.pt port.dom.pt dom.pt
 EOF
 
