@@ -13,10 +13,10 @@ options {
         172.16.20.0/24;
     };
 
-    forwarders {
-        1.1.1.1;
-        1.0.0.1;
-    };
+    // forwarders {
+    //     1.1.1.1;
+    //     1.0.0.1;
+    // };
 
     dnssec-validation auto;
 };

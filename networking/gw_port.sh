@@ -17,6 +17,12 @@ if [ -f /etc/network/interfaces ]; then
   cp /etc/network/interfaces /etc/network/interfaces.bak
 fi
 install -m 644 "$DIR/interfaces-gw-port" /etc/network/interfaces
+cat > /etc/resolv.conf.head <<EOF
+nameserver 127.0.0.1
+nameserver 10.10.254.2
+search port.dom.pt usa.dom.pt dom.pt
+EOF
+
 systemctl restart networking 2>/dev/null
 
 echo "Waiting for Internet connection on enp0s10..."
