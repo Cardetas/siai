@@ -6,6 +6,7 @@ zone "dom.pt" {
     type master;
     file "/var/lib/bind/dom.pt.db";
     dnssec-policy default;
+    inline-signing yes;
     key-directory "/var/lib/bind";
     allow-transfer { key "tsig-key"; };
     also-notify { 10.10.254.2; };
