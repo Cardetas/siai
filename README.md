@@ -216,12 +216,17 @@ exit
 ```
 
 ### 4. SSH Access Control & Gateway Jump Verification
-From the client machine, run standard OpenSSH commands using `-J` (Jump Host):
+From the client machine (logged in as `mgr1` via `su - mgr1` or as `root`), run standard OpenSSH commands using `-J` (Jump Host).
+*(Note: Each user's `.ssh/id_ed25519` is automatically configured by `client_ssh.sh`, so you can run with or without `-i`)*:
 
 * **Manager access via Gateway (MUST SUCCEED)**:
   ```bash
+  # Inside 'su - mgr1':
+  ssh -J mgr1@ssh.dom.pt mgr1@mail.port.dom.pt 'hostname -f'
+  ssh -J mgr1@ssh.dom.pt mgr1@smtp2.usa.dom.pt 'hostname -f'
+
+  # Or explicitly passing identity file:
   ssh -i ~/.ssh/id_ed25519_mgr1 -J mgr1@ssh.dom.pt mgr1@mail.port.dom.pt 'hostname -f'
-  ssh -i ~/.ssh/id_ed25519_mgr1 -J mgr1@ssh.dom.pt mgr1@smtp2.usa.dom.pt 'hostname -f'
   ```
 
 * **Developer access attempt (MUST BE REFUSED by `AllowGroups managers`)**:
