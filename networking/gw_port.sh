@@ -7,24 +7,19 @@ set -euo pipefail
 }
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${DIR}/common.sh"
 
 cat > /etc/sysctl.d/99-siai-forwarding.conf <<EOF
 net.ipv4.ip_forward = 1
 EOF
 sysctl -p /etc/sysctl.d/99-siai-forwarding.conf >/dev/null
 
-ifdown -a
-if [ -f /etc/network/interfaces ]; then
-  cp /etc/network/interfaces /etc/network/interfaces.bak
-fi
-install -m 644 "$DIR/interfaces-gw-port" /etc/network/interfaces
+install_interfaces_template "${DIR}/interfaces-gw-port" enp0s8 enp0s9
 sed -i '/^prepend domain-name-servers/d;/^prepend domain-search/d' /etc/dhcp/dhclient.conf
 cat >> /etc/dhcp/dhclient.conf <<EOF
 prepend domain-name-servers 127.0.0.1, 10.10.254.2;
 prepend domain-search "port.dom.pt", "usa.dom.pt", "dom.pt";
 EOF
-
-systemctl restart networking 2>/dev/null
 
 echo "Waiting for Internet connection on enp0s10..."
 count=0
@@ -32,6 +27,11 @@ until ping -c 1 -W 1 8.8.8.8 >/dev/null 2>&1 || [ $count -ge 15 ]; do
     sleep 1
     count=$((count + 1))
 done
+
+cat > /etc/apt/apt.conf.d/99force-ipv4 <<EOF
+Acquire::ForceIPv4 "true";
+Acquire::http::Pipeline-Depth "0";
+EOF
 
 DEBIAN_FRONTEND=noninteractive apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install -y nftables

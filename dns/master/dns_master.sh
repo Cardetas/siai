@@ -11,11 +11,13 @@ DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 DEBIAN_FRONTEND=noninteractive apt-get update -q
 DEBIAN_FRONTEND=noninteractive apt-get install -y bind9 bind9utils bind9-dnsutils
 
+systemctl stop named 2>/dev/null || true
 
 install -m 640 -o root -g bind "$DIR/../tsig.key" /etc/bind/tsig.key
 install -m 644 "$DIR/named.conf.options" /etc/bind/named.conf.options
 install -m 644 "$DIR/named.conf.local" /etc/bind/named.conf.local
 install -d -m 775 -o bind -g bind /var/lib/bind
+rm -f /var/lib/bind/*.jnl /var/lib/bind/*.jbk
 for zonefile in "$DIR/zones/"*; do
   filename="$(basename "$zonefile")"
   install -m 644 -o bind -g bind "$zonefile" "/var/lib/bind/$filename"

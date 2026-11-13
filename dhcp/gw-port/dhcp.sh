@@ -17,6 +17,9 @@ DEBIAN_FRONTEND=noninteractive apt-get install -y kea-dhcp4-server kea-dhcp-ddns
 install -m 644 "$DIR/kea-dhcp4.conf" /etc/kea/kea-dhcp4.conf
 install -m 644 "$DIR/kea-dhcp-ddns.conf" /etc/kea/kea-dhcp-ddns.conf
 
+kea-dhcp4 -t /etc/kea/kea-dhcp4.conf
+kea-dhcp-ddns -t /etc/kea/kea-dhcp-ddns.conf
+
 systemctl restart kea-dhcp-ddns-server
 systemctl restart kea-dhcp4-server
 systemctl enable kea-dhcp-ddns-server kea-dhcp4-server

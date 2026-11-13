@@ -7,23 +7,23 @@ set -euo pipefail
 }
 
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${DIR}/common.sh"
 
 cat > /etc/sysctl.d/99-siai-forwarding.conf <<EOF
 net.ipv4.ip_forward = 1
 EOF
 sysctl -p /etc/sysctl.d/99-siai-forwarding.conf >/dev/null
 
-ifdown -a
-if [ -f /etc/network/interfaces ]; then
-  cp /etc/network/interfaces /etc/network/interfaces.bak
-fi
-install -m 644 "$DIR/interfaces-gw-usa" /etc/network/interfaces
+install_interfaces_template "${DIR}/interfaces-gw-usa" enp0s8 enp0s9
 cat > /etc/resolv.conf <<EOF
 nameserver 127.0.0.1
 nameserver 10.10.254.1
-search  usa.dom.pt port.dom.pt dom.pt
+search usa.dom.pt port.dom.pt dom.pt
 EOF
 
-systemctl restart networking 2>/dev/null
+cat > /etc/apt/apt.conf.d/99force-ipv4 <<EOF
+Acquire::ForceIPv4 "true";
+Acquire::http::Pipeline-Depth "0";
+EOF
 
 echo "ip forwarding, interfaces, and dns resolver are setup!"

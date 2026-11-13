@@ -19,7 +19,19 @@ update-ca-certificates
 install -m 644 "$DIR/client/ldap.conf" /etc/ldap/ldap.conf
 install -m 600 -o nslcd -g nslcd "$DIR/client/nslcd.conf" /etc/nslcd.conf
 
-pam-auth-update --enable mkhomedir
+if [ ! -f /usr/share/pam-configs/mkhomedir ]; then
+  cat > /usr/share/pam-configs/mkhomedir <<'EOF'
+Name: Create home directory on login
+Default: yes
+Priority: 0
+Session-Type: Additional
+Session:
+        required        pam_mkhomedir.so umask=0022 skel=/etc/skel
+EOF
+fi
+pam-auth-update --enable mkhomedir || true
+grep -q "pam_mkhomedir.so" /etc/pam.d/common-session || \
+  echo "session required pam_mkhomedir.so umask=0022 skel=/etc/skel" >> /etc/pam.d/common-session
 
 systemctl restart nslcd
 systemctl enable nslcd
