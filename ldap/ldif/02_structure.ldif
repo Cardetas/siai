@@ -29,11 +29,10 @@ memberUid: dev2
 # Managers
 dn: uid=mgr1,ou=people,dc=dom,dc=pt
 objectClass: top
-objectClass: inetOrgPerson
+objectClass: account
 objectClass: posixAccount
 objectClass: shadowAccount
 cn: Manager One
-sn: One
 uid: mgr1
 uidNumber: 20001
 gidNumber: 10001
@@ -43,11 +42,10 @@ userPassword: __PASSWORD_HASH__
 
 dn: uid=mgr2,ou=people,dc=dom,dc=pt
 objectClass: top
-objectClass: inetOrgPerson
+objectClass: account
 objectClass: posixAccount
 objectClass: shadowAccount
 cn: Manager Two
-sn: Two
 uid: mgr2
 uidNumber: 20002
 gidNumber: 10001
@@ -58,11 +56,10 @@ userPassword: __PASSWORD_HASH__
 # Developers
 dn: uid=dev1,ou=people,dc=dom,dc=pt
 objectClass: top
-objectClass: inetOrgPerson
+objectClass: account
 objectClass: posixAccount
 objectClass: shadowAccount
 cn: Developer One
-sn: One
 uid: dev1
 uidNumber: 20003
 gidNumber: 10002
@@ -72,11 +69,10 @@ userPassword: __PASSWORD_HASH__
 
 dn: uid=dev2,ou=people,dc=dom,dc=pt
 objectClass: top
-objectClass: inetOrgPerson
+objectClass: account
 objectClass: posixAccount
 objectClass: shadowAccount
 cn: Developer Two
-sn: Two
 uid: dev2
 uidNumber: 20004
 gidNumber: 10002

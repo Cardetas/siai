@@ -23,14 +23,9 @@ echo "slapd slapd/domain string $DOMAIN"          | debconf-set-selections
 echo "slapd shared/organization string $DOMAIN"   | debconf-set-selections
 echo "slapd slapd/password1 password $ADMIN_PW"   | debconf-set-selections
 echo "slapd slapd/password2 password $ADMIN_PW"   | debconf-set-selections
-echo "slapd slapd/backend select MDB"             | debconf-set-selections
 echo "slapd slapd/purge_database boolean true"    | debconf-set-selections
 echo "slapd slapd/move_old_database boolean true" | debconf-set-selections
 DEBIAN_FRONTEND=noninteractive dpkg-reconfigure -f noninteractive slapd
-
-for schema in cosine nis inetorgperson; do
-  ldapadd -Y EXTERNAL -H ldapi:/// -f "/etc/ldap/schema/${schema}.ldif" 2>/dev/null || true
-done
 
 install -d -m 755 -o openldap -g openldap /etc/ldap/certs
 install -m 644 -o openldap -g openldap "$DIR/certs/ca.crt" /etc/ldap/certs/dom_ca.crt
