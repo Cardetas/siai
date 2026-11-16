@@ -23,6 +23,9 @@ bash "${PROJECT_ROOT}/dhcp/gw-port/dhcp.sh"
 echo "Setting up Master dns"
 bash "${PROJECT_ROOT}/dns/master/dns_master.sh"
 
+echo "Setting up ldap client"
+bash "${PROJECT_ROOT}/ldap/ldap_client.sh"
+
 echo "Setting up ssh gateway"
 bash "${PROJECT_ROOT}/ssh/gateway/gateway_ssh.sh"
 

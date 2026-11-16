@@ -213,6 +213,8 @@ check_reverse "172.16.40.20"     "smtp2.usa.dom.pt"
 # ------------------------------------------------------------------------------
 echo -e "\n${BLUE}--- 6. DNSSEC Signing ---${NC}"
 check_dnssec "dom.pt"
+check_dnssec "port.dom.pt"
+check_dnssec "usa.dom.pt"
 
 # ------------------------------------------------------------------------------
 # Summary
